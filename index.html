@@ -1,77 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Telegram Mini App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Telegram Mini App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Telegram Mini App SDK -->
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <!-- Telegram Mini App SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-<style>
-body{
-  margin:0;
-  padding:0;
-  font-family:Arial, sans-serif;
-  background:#0f172a;
-  color:white;
-}
-.header{
-  padding:16px;
-  text-align:center;
-  background:#020617;
-  font-size:20px;
-}
-.card{
-  background:#020617;
-  margin:16px;
-  padding:16px;
-  border-radius:12px;
-}
-button{
-  width:100%;
-  padding:14px;
-  border:none;
-  border-radius:10px;
-  background:#2563eb;
-  color:white;
-  font-size:16px;
-}
-.small{
-  font-size:14px;
-  opacity:0.7;
-}
-</style>
+  <style>
+    body{
+      margin:0;
+      padding:0;
+      font-family:Arial, sans-serif;
+      background:#0f172a;
+      color:#ffffff;
+    }
+    .container{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .box{
+      background:#020617;
+      padding:24px;
+      border-radius:16px;
+      width:90%;
+      max-width:360px;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    }
+    h1{
+      margin:0 0 10px;
+      font-size:22px;
+    }
+    p{
+      font-size:14px;
+      opacity:0.8;
+    }
+    button{
+      margin-top:20px;
+      width:100%;
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      background:#2563eb;
+      color:#fff;
+      font-size:16px;
+      cursor:pointer;
+    }
+    .small{
+      margin-top:12px;
+      font-size:12px;
+      opacity:0.6;
+    }
+  </style>
 </head>
 
 <body>
+<div class="container">
+  <div class="box">
+    <h1>🚀 Telegram Mini App</h1>
+    <p id="status">Loading Telegram App...</p>
 
-<div class="header">🚀 Telegram Mini App</div>
+    <button onclick="showUser()">Show My Telegram Info</button>
 
-<div class="card">
-  <p id="user" class="small">User not loaded</p>
-  <button onclick="loadUser()">Load My Profile</button>
-</div>
-
-<div class="card">
-  <p class="small">💰 Income system coming next</p>
+    <div class="small">
+      GitHub: milon-create / Telegram-mini-app1
+    </div>
+  </div>
 </div>
 
 <script>
-Telegram.WebApp.ready();
-Telegram.WebApp.expand();
+  Telegram.WebApp.ready();
+  Telegram.WebApp.expand();
 
-function loadUser(){
-  let user = Telegram.WebApp.initDataUnsafe.user;
-  if(user){
-    document.getElementById("user").innerHTML =
-      "Name: " + user.first_name + "<br>ID: " + user.id;
-  }else{
-    document.getElementById("user").innerText =
-      "Please open this app from Telegram";
+  function showUser(){
+    const user = Telegram.WebApp.initDataUnsafe.user;
+    if(user){
+      document.getElementById("status").innerHTML =
+        "Hello, " + user.first_name + "<br>ID: " + user.id;
+    }else{
+      document.getElementById("status").innerText =
+        "Please open this page from Telegram";
+    }
   }
-}
 </script>
-
 </body>
 </html>
