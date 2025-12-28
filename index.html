@@ -9,60 +9,101 @@
 <style>
 body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:#0f172a;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background:linear-gradient(135deg,#020617,#0f172a);
   color:#fff;
 }
-.container{
+.app{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
 }
-.box{
+.card{
   background:#020617;
+  width:92%;
+  max-width:380px;
+  border-radius:18px;
   padding:20px;
-  border-radius:16px;
-  width:90%;
-  max-width:360px;
-  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.5);
 }
-h1{font-size:22px;}
+.header{
+  text-align:center;
+  margin-bottom:15px;
+}
+.header h1{
+  font-size:22px;
+  margin:0;
+}
+.header p{
+  font-size:13px;
+  opacity:.7;
+}
+.section{
+  background:#0f172a;
+  padding:14px;
+  border-radius:14px;
+  margin-top:12px;
+}
 .balance{
-  margin:15px 0;
-  font-size:18px;
+  font-size:20px;
   color:#22c55e;
+  text-align:center;
 }
 button{
   width:100%;
   padding:14px;
-  margin-top:10px;
   border:none;
   border-radius:12px;
   background:#2563eb;
-  color:#fff;
-  font-size:16px;
+  color:white;
+  font-size:15px;
+  margin-top:10px;
 }
-.small{font-size:12px;opacity:0.7;margin-top:10px;}
+button.secondary{
+  background:#334155;
+}
+.small{
+  font-size:12px;
+  opacity:.7;
+  margin-top:6px;
+  word-break:break-all;
+}
 </style>
 </head>
 
 <body>
-<div class="container">
-  <div class="box">
-    <h1>💰 Mini App Income</h1>
-    <div id="user">Loading...</div>
+<div class="app">
+  <div class="card">
 
-    <div class="balance">
-      Balance: <span id="bal">0</span> Coins
+    <div class="header">
+      <h1>💰 Income Mini App</h1>
+      <p id="user">Loading...</p>
     </div>
 
-    <button onclick="doTask()">🔗 Complete Task</button>
-    <button onclick="withdraw()">🏦 Withdraw</button>
-
-    <div class="small">
-      Demo system – real earning next
+    <div class="section">
+      <div class="balance">
+        Balance: <span id="bal">0</span> Coins
+      </div>
     </div>
+
+    <div class="section">
+      <button onclick="completeTask()">✅ Complete Task (+10)</button>
+    </div>
+
+    <div class="section">
+      <b>👥 Referrals</b>
+      <div class="small">Your link:</div>
+      <div class="small" id="refLink">Loading...</div>
+      <div class="small">Total Referrals: <span id="refCount">0</span></div>
+      <button class="secondary" onclick="copyRef()">📋 Copy Referral Link</button>
+    </div>
+
+    <div class="section">
+      <button onclick="withdraw()">🏦 Withdraw</button>
+      <div class="small">Minimum 100 coins</div>
+    </div>
+
   </div>
 </div>
 
@@ -70,28 +111,55 @@ button{
 Telegram.WebApp.ready();
 Telegram.WebApp.expand();
 
-let balance = 0;
-let user = Telegram.WebApp.initDataUnsafe.user;
+const user = Telegram.WebApp.initDataUnsafe.user;
+const userId = user ? user.id : "guest";
+
+let balance = Number(localStorage.getItem("bal_"+userId)) || 0;
+let refs = Number(localStorage.getItem("refs_"+userId)) || 0;
 
 document.getElementById("user").innerText =
   user ? "Hello, " + user.first_name : "Open from Telegram";
 
-function doTask(){
-  // Example shortlink
-  Telegram.WebApp.openLink("https://example.com");
+document.getElementById("bal").innerText = balance;
+document.getElementById("refCount").innerText = refs;
+
+// Referral system
+const refLink = "https://t.me/taskincome_milon_bot?start=" + userId;
+document.getElementById("refLink").innerText = refLink;
+
+// Detect referral
+const params = new URLSearchParams(window.location.search);
+const ref = params.get("ref");
+if(ref && ref !== userId){
+  if(!localStorage.getItem("joined_"+userId)){
+    localStorage.setItem("joined_"+userId,"1");
+    let r = Number(localStorage.getItem("refs_"+ref)) || 0;
+    localStorage.setItem("refs_"+ref, r+1);
+  }
+}
+
+function completeTask(){
   balance += 10;
+  localStorage.setItem("bal_"+userId, balance);
   document.getElementById("bal").innerText = balance;
 }
 
 function withdraw(){
-  if(balance >= 50){
-    Telegram.WebApp.showAlert("Withdraw request sent!");
+  if(balance >= 100){
+    Telegram.WebApp.showAlert("Withdraw request submitted!");
     balance = 0;
+    localStorage.setItem("bal_"+userId, balance);
     document.getElementById("bal").innerText = balance;
   }else{
-    Telegram.WebApp.showAlert("Minimum 50 coins required");
+    Telegram.WebApp.showAlert("Minimum 100 coins required");
   }
 }
+
+function copyRef(){
+  navigator.clipboard.writeText(refLink);
+  Telegram.WebApp.showAlert("Referral link copied!");
+}
 </script>
+
 </body>
 </html>
