@@ -1,91 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Telegram Mini App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Telegram Mini App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Telegram Mini App SDK -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <style>
-    body{
-      margin:0;
-      padding:0;
-      font-family:Arial, sans-serif;
-      background:#0f172a;
-      color:#ffffff;
-    }
-    .container{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .box{
-      background:#020617;
-      padding:24px;
-      border-radius:16px;
-      width:90%;
-      max-width:360px;
-      text-align:center;
-      box-shadow:0 10px 30px rgba(0,0,0,0.5);
-    }
-    h1{
-      margin:0 0 10px;
-      font-size:22px;
-    }
-    p{
-      font-size:14px;
-      opacity:0.8;
-    }
-    button{
-      margin-top:20px;
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:12px;
-      background:#2563eb;
-      color:#fff;
-      font-size:16px;
-      cursor:pointer;
-    }
-    .small{
-      margin-top:12px;
-      font-size:12px;
-      opacity:0.6;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#0f172a;
+  color:#fff;
+}
+.container{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.box{
+  background:#020617;
+  padding:20px;
+  border-radius:16px;
+  width:90%;
+  max-width:360px;
+  text-align:center;
+}
+h1{font-size:22px;}
+.balance{
+  margin:15px 0;
+  font-size:18px;
+  color:#22c55e;
+}
+button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  background:#2563eb;
+  color:#fff;
+  font-size:16px;
+}
+.small{font-size:12px;opacity:0.7;margin-top:10px;}
+</style>
 </head>
 
 <body>
 <div class="container">
   <div class="box">
-    <h1>🚀 Telegram Mini App</h1>
-    <p id="status">Loading Telegram App...</p>
+    <h1>💰 Mini App Income</h1>
+    <div id="user">Loading...</div>
 
-    <button onclick="showUser()">Show My Telegram Info</button>
+    <div class="balance">
+      Balance: <span id="bal">0</span> Coins
+    </div>
+
+    <button onclick="doTask()">🔗 Complete Task</button>
+    <button onclick="withdraw()">🏦 Withdraw</button>
 
     <div class="small">
-      GitHub: milon-create / Telegram-mini-app1
+      Demo system – real earning next
     </div>
   </div>
 </div>
 
 <script>
-  Telegram.WebApp.ready();
-  Telegram.WebApp.expand();
+Telegram.WebApp.ready();
+Telegram.WebApp.expand();
 
-  function showUser(){
-    const user = Telegram.WebApp.initDataUnsafe.user;
-    if(user){
-      document.getElementById("status").innerHTML =
-        "Hello, " + user.first_name + "<br>ID: " + user.id;
-    }else{
-      document.getElementById("status").innerText =
-        "Please open this page from Telegram";
-    }
+let balance = 0;
+let user = Telegram.WebApp.initDataUnsafe.user;
+
+document.getElementById("user").innerText =
+  user ? "Hello, " + user.first_name : "Open from Telegram";
+
+function doTask(){
+  // Example shortlink
+  Telegram.WebApp.openLink("https://example.com");
+  balance += 10;
+  document.getElementById("bal").innerText = balance;
+}
+
+function withdraw(){
+  if(balance >= 50){
+    Telegram.WebApp.showAlert("Withdraw request sent!");
+    balance = 0;
+    document.getElementById("bal").innerText = balance;
+  }else{
+    Telegram.WebApp.showAlert("Minimum 50 coins required");
   }
+}
 </script>
 </body>
 </html>
