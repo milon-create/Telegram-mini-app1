@@ -9,7 +9,7 @@
 <style>
 body{
   margin:0;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family:'Segoe UI',Arial,sans-serif;
   background:linear-gradient(135deg,#020617,#0f172a);
   color:#fff;
 }
@@ -23,46 +23,71 @@ body{
   background:#020617;
   width:92%;
   max-width:380px;
-  border-radius:18px;
+  border-radius:20px;
   padding:20px;
-  box-shadow:0 20px 40px rgba(0,0,0,.5);
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
 }
-.header{
-  text-align:center;
-  margin-bottom:15px;
-}
-.header h1{
-  font-size:22px;
-  margin:0;
-}
-.header p{
-  font-size:13px;
-  opacity:.7;
-}
+.header{text-align:center;margin-bottom:16px;}
+.header h1{font-size:22px;margin:0;}
+.header p{font-size:13px;opacity:.7;}
+
 .section{
   background:#0f172a;
   padding:14px;
-  border-radius:14px;
+  border-radius:16px;
   margin-top:12px;
 }
+
 .balance{
-  font-size:20px;
+  font-size:22px;
   color:#22c55e;
   text-align:center;
+  font-weight:600;
 }
-button{
+
+/* 🔥 PRO BUTTONS */
+.btn{
   width:100%;
   padding:14px;
-  border:none;
-  border-radius:12px;
-  background:#2563eb;
-  color:white;
-  font-size:15px;
   margin-top:10px;
+  border:none;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:600;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  cursor:pointer;
+  transition:all .2s ease;
 }
-button.secondary{
-  background:#334155;
+
+.btn:active{
+  transform:scale(.97);
 }
+
+.btn-task{
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+.btn-task:hover{
+  box-shadow:0 0 12px rgba(34,197,94,.6);
+}
+
+.btn-copy{
+  background:linear-gradient(135deg,#38bdf8,#2563eb);
+}
+.btn-copy:hover{
+  box-shadow:0 0 12px rgba(56,189,248,.6);
+}
+
+.btn-withdraw{
+  background:linear-gradient(135deg,#f59e0b,#d97706);
+}
+.btn-withdraw:hover{
+  box-shadow:0 0 12px rgba(245,158,11,.6);
+}
+
 .small{
   font-size:12px;
   opacity:.7;
@@ -88,19 +113,19 @@ button.secondary{
     </div>
 
     <div class="section">
-      <button onclick="completeTask()">✅ Complete Task (+10)</button>
+      <button class="btn btn-task" onclick="completeTask()">✅ Complete Task +10</button>
     </div>
 
     <div class="section">
       <b>👥 Referrals</b>
       <div class="small">Your link:</div>
-      <div class="small" id="refLink">Loading...</div>
+      <div class="small" id="refLink"></div>
       <div class="small">Total Referrals: <span id="refCount">0</span></div>
-      <button class="secondary" onclick="copyRef()">📋 Copy Referral Link</button>
+      <button class="btn btn-copy" onclick="copyRef()">📋 Copy Referral Link</button>
     </div>
 
     <div class="section">
-      <button onclick="withdraw()">🏦 Withdraw</button>
+      <button class="btn btn-withdraw" onclick="withdraw()">🏦 Withdraw</button>
       <div class="small">Minimum 100 coins</div>
     </div>
 
@@ -123,20 +148,8 @@ document.getElementById("user").innerText =
 document.getElementById("bal").innerText = balance;
 document.getElementById("refCount").innerText = refs;
 
-// Referral system
 const refLink = "https://t.me/taskincome_milon_bot?start=" + userId;
 document.getElementById("refLink").innerText = refLink;
-
-// Detect referral
-const params = new URLSearchParams(window.location.search);
-const ref = params.get("ref");
-if(ref && ref !== userId){
-  if(!localStorage.getItem("joined_"+userId)){
-    localStorage.setItem("joined_"+userId,"1");
-    let r = Number(localStorage.getItem("refs_"+ref)) || 0;
-    localStorage.setItem("refs_"+ref, r+1);
-  }
-}
 
 function completeTask(){
   balance += 10;
